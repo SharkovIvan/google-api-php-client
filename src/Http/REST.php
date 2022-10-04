@@ -128,10 +128,11 @@ class REST
         // retry strategy
         if (intVal($code) >= 400) {
             // if we errored out, it should be safe to grab the response body
-            $body = (string) $response->getBody();
+            $body = json_decode($response->getBody());
+
 
             // Check if we received errors, and add those to the Exception for convenience
-            throw new GoogleServiceException($body, $code, null, self::getResponseErrors($body));
+            throw new \Exception($body->error->message, $code, null);
         }
 
         // Ensure we only pull the entire body into memory if the request is not
